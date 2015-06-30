@@ -4,7 +4,8 @@
  sample-utils
   (:use   [overtone.live])
   (:require [clojure.string :as string]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [clojure.core.matrix :as matrix]))
 
 (defn path-to-described-samples
   [path]
@@ -18,7 +19,7 @@
 
 (defn featureset
   [sample-descriptions defaults]
-  (zip-map (keys defaults) (map (comp vec set) (transpose sample-descriptions))))
+  (zip-map (keys defaults) (map (comp vec set) (matrix/transpose sample-descriptions))))
 
 (defn try-corrected-val
   "This gets mapped over key-value pairs provided by the user.
