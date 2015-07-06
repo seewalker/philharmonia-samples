@@ -5,9 +5,14 @@
   (:use   [overtone.live])
   (:require [clojure.string :as string]
             [clojure.java.io :as io]
+            [clj-diff.core :as diff]
             [clojure.core.matrix :as matrix]))
 
+(def *sampleroot* "/Users/shalom/myData/phil-samples")
 (defn path-to-described-samples
+  "Takes a path pointing to a directory which is expected to contain a subdirectory for each wanted sampled instrument. The directory for each instrument is expected to have sound files of .wav format, and the names of these files are supposed to consist of the instrument name followed by underscore-separated features associated with the sample.
+
+  Produces a map where the keys are the identifying features of the sample, and the values are the samples themselves (not directly callable samples, because they are made with load-sample)"
   [path]
   (let [relevant-fnames (filter (fn [fname] (-> (re-matches #".*.wav" fname) nil? not))
                                 (map str (rest (file-seq (io/file path)))))
@@ -15,52 +20,50 @@
                         (rest (map #(first (string/split % #".wav"))
                                (string/split fname #"_"))))]
     (zipmap feature-names (map load-sample relevant-fnames))))
-;time to resurrect this from the old commit, in order to incorperate this into autocorrect.
 
 (defn featureset
-  [sample-descriptions defaults]
-  (zip-map (keys defaults) (map (comp vec set) (matrix/transpose sample-descriptions))))
+  "Takes a list of names associated with the features and a list of allowed values associated with those names.
+   Produces a map of those associations; this is done to eliminate redundencies. "
+  [featurenames featurevals]
+  (zipmap featurenames (map (comp vec set) (matrix/transpose featurevals))))
+
+; the notion of correct-values? can be removed by making max distance 0.  the notion of modifyable-features
+; can be removed by
 
 (defn try-corrected-val
-  "This gets mapped over key-value pairs provided by the user.
-   This checks for likely mis-spellings of key names, value names, not for the existence of a sample. Not all permutations are checked, that is.
-   Right now the assumption is made that if the featurename is being corrected, the featureval is correct.
-   The last argument is a map which specifies the autocorrect parameters.
-  "
-  [ [featurename featureval] defaults featureset {:keys max-distance correct-values? modifiable-features}]
-  (let [vds (for [allowed-valuename (get featureset featurename)]
-              {:n allowed-valuename :d (edit-distance featureval allowed-valuename)})
-        vminimum (first (sort-by :d vds))]
-    (if (contains? (get featureset featurename) featureval) ;the featureval is valid.
+  "This gets mapped over key-value pairs provided by the user. "
+  [featurename featureval defaults featureset distance-maxes ]
+  (let [ds (for [allowed-valuename (get featureset featurename)]
+              {:n allowed-valuename :d (diff/edit-distance featureval allowed-valuename)})
+        minimum (first (sort-by :d ds))]
+    (if (some #(= featureval %) (get featureset featurename)) ;the featureval is valid.
       featureval
-      (if (and (string? featureval) correct-values? (contains? modifiable-features featurename)) ;the featureval is modifyablw
-        (if (< (:d vminimum) max-distance)
-          (:n vminimum)
-          (println (format "attempted to correct feature %s, but no suitable correction found" featurename)))
-        (println (format "unmodifyable feature %s will not undergo correction" featurename))))))
+      (if (and (string? featureval) (< (:d minimum) (get distance-maxes featurename)))
+        (do
+          (println (format "corrected featurename %s from value %s to value %s" featurename featureval (:n minimum)))
+          (:n minimum))
+        (do
+           (println (format "not going to correct featurename %s which has value %s, trying default value %s" featurename featureval (get defaults featurename)))
+           (get defaults featurename))))))
 
 
 (defn play-gen
-  "A closure that produces a function ready to be used as if it were an overtone instrument. I abandoned using the definst infrastructure because the logistics were too complicated for my patience and this code similarly has a sense of defaults to handle partial input, and similarly produces a ugen.
-  What is the first argument to play-buf? I am having it be '1' so far.
-
-  key-order is a function that takes a map and returns a vector with its values in the correct order.
-  "
-  [described-inst defaults autocorrect-config]
+  "A closure that produces a function that maps instrument features to ugens."
+  [described-inst defaults feature-set distance-maxes]
   (let [feature-names (keys defaults)
         inst-defaults (vals defaults)
-        map-handle (fn [the-map autocorrect-params] (for [[feature-name default-value] defaults] ;the order here enforces proper ordering.
-                                                       (if (contains? the-map feature-name) ;since this handling is here, it might make sense to refactor
-                                                            (try-corrected-val feature-name (get the-map feature-name) autocorrect-params)
-                                                            default-value)))
+        map-handle (fn [the-map distance-maxes] (for [[feature-name default-value] defaults] ;the order here enforces proper ordering.
+                                                 (if (contains? the-map feature-name) ;since this handling is here, it might make sense to refactor
+                                                     (try-corrected-val feature-name (get the-map feature-name) defaults feature-set distance-maxes)
+                                                     default-value)))]
     (fn [& args]
       (let [descr (if (empty? args)
                     inst-defaults
                     (if (vector? (first args))
                       (first args)
                       (if (map? (first args))
-                        (map-handle (first args) autocorrect-config) ;map-handle has to sort keys into a vector.
-                        (map-handle (hash-map args) autocorrect-config))))]
+                        (map-handle (first args) distance-maxes)
+                        (map-handle (hash-map args) distance-maxes))))]
         (if (contains? described-inst descr)
             (play-buf 1 (get described-inst descr))
             (println (format "%s that sample is not available" (str (vec descr)))))))))
