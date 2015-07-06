@@ -38,13 +38,13 @@
         minimum (first (sort-by :d ds))]
     (if (some #(= featureval %) (get featureset featurename)) ;the featureval is valid.
       featureval
-      (if (and (string? featureval) (< (:d minimum) (get distance-maxes featurename)))
+      (if (and (string? featureval) (<= (:d minimum) (get distance-maxes featurename)))
         (do
           (println (format "corrected featurename %s from value %s to value %s" featurename featureval (:n minimum)))
           (:n minimum))
         (do
-           (println (format "not going to correct featurename %s which has value %s, trying default value %s" featurename featureval (get defaults featurename)))
-           (get defaults featurename))))))
+          (println (format "not going to correct featurename %s which has value %s, trying default value %s" featurename featureval (get defaults featurename)))
+          (get defaults featurename))))))
 
 
 (defn play-gen

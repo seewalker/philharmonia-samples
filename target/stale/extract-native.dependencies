@@ -1,1 +1,0 @@
-([:dependencies ([overtone/overtone "0.9.1"] [clj-diff/clj-diff "1.0.0-SNAPSHOT"] [net.mikera/core.matrix "0.36.1"] [org.clojure/tools.nrepl "0.2.6" :exclusions ([org.clojure/clojure]) :scope "test"] [clojure-complete/clojure-complete "0.2.3" :exclusions ([org.clojure/clojure]) :scope "test"])])
