@@ -5,7 +5,7 @@
   (:use [sample-utils]
         [overtone.live]))
 
-(def contrabassoon-samples (path-to-described-samples (str *sampleroot* "/contrabassoon")))
+(def contrabassoon-samples (path-to-described-samples (str sampleroot "/contrabassoon")))
 (def defaults (array-map :note "F5" :duration "15" :loudness "forte" :style "normal"))
 (def features (featureset [:note :duration :loudness :style] (keys contrabassoon-samples)))
 (def distance-maxes {:note 2 :duration 4 :loudness 3 :style 6})

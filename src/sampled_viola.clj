@@ -5,7 +5,7 @@
   (:use [sample-utils]
         [overtone.live]))
 
-(def viola-samples (path-to-described-samples (str *sampleroot* "/viola")))
+(def viola-samples (path-to-described-samples (str sampleroot "/viola")))
 (def defaults (array-map :note "F5" :duration "025" :loudness "forte" :style "normal"))
 (def features (featureset [:note :duration :loudness :style] (keys viola-samples)))
 (def distance-maxes {:note 2 :duration 4 :loudness 3 :style 6})

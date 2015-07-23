@@ -5,7 +5,7 @@
   (:use [sample-utils]
         [overtone.live]))
 
-(def trumpet-samples (path-to-described-samples (str *sampleroot* "/trumpet")))
+(def trumpet-samples (path-to-described-samples (str sampleroot "/trumpet")))
 (def defaults (array-map :note "F5" :duration "025" :loudness "forte" :style "normal"))
 (def features (featureset [:note :duration :loudness :style] (keys trumpet-samples)))
 (def distance-maxes {:note 2 :duration 4 :loudness 3 :style 6})

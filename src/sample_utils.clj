@@ -8,7 +8,7 @@
             [clj-diff.core :as diff]
             [clojure.core.matrix :as matrix]))
 
-(def *sampleroot* "/Users/shalom/myData/phil-samples")
+(def sampleroot "/Users/shalom/myData/phil-samples")
 (defn path-to-described-samples
   "Takes a path pointing to a directory which is expected to contain a subdirectory for each wanted sampled instrument. The directory for each instrument is expected to have sound files of .wav format, and the names of these files are supposed to consist of the instrument name followed by underscore-separated features associated with the sample.
 
@@ -55,7 +55,9 @@
         map-handle (fn [the-map distance-maxes] (for [[feature-name default-value] defaults] ;the order here enforces proper ordering.
                                                  (if (contains? the-map feature-name) ;since this handling is here, it might make sense to refactor
                                                      (try-corrected-val feature-name (get the-map feature-name) defaults feature-set distance-maxes)
-                                                     default-value)))]
+                                                     default-value)))
+        num-channels 1 ;this is information *about* the samples that the sampling process must know about.
+        ]
     (fn [& args]
       (let [descr (if (empty? args)
                     inst-defaults
@@ -65,5 +67,5 @@
                         (map-handle (first args) distance-maxes)
                         (map-handle (hash-map args) distance-maxes))))]
         (if (contains? described-inst descr)
-            (play-buf 1 (get described-inst descr))
+            (play-buf num-channels (get described-inst descr))
             (println (format "%s that sample is not available" (str (vec descr)))))))))
