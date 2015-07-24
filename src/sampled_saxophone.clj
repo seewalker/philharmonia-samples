@@ -9,4 +9,8 @@
 (def defaults (array-map :note "F5" :duration "025" :loudness "forte" :style "normal"))
 (def features (featureset [:note :duration :loudness :style] (keys saxophone-samples)))
 (def distance-maxes {:note 2 :duration 4 :loudness 3 :style 6})
-(def saxophone (play-gen saxophone-samples defaults features distance-maxes))
+
+(def ^:private tmp (play-gen saxophone-samples defaults features distance-maxes))
+(def saxophone (:ugen tmp))
+(def saxophone-inst (:effect tmp))
+(def saxophonei (:effect tmp))

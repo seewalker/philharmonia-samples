@@ -6,7 +6,11 @@
         [overtone.live]))
 
 (def guitar-samples (path-to-described-samples (str sampleroot "/guitar")))
-(def defaults (array-map :note "F5" :duration "very-long" :loudness "forte" :style "normal"))
+(def defaults (array-map :note "C4" :duration "very-long" :loudness "forte" :style "normal"))
 (def features (featureset [:note :duration :loudness :style] (keys guitar-samples)))
 (def distance-maxes {:note 2 :duration 4 :loudness 3 :style 6})
-(def guitar (play-gen guitar-samples defaults features distance-maxes))
+;
+(def ^:private tmp (play-gen guitar-samples defaults features distance-maxes))
+(def guitar (:ugen tmp))
+(def guitar-inst (:effect tmp))
+(def guitari (:effect tmp))

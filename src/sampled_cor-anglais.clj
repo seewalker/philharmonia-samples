@@ -9,4 +9,8 @@
 (def defaults (array-map :note "F5" :duration "025" :loudness "forte" :style "normal"))
 (def features (featureset [:note :duration :loudness :style] (keys cor-anglais-samples)))
 (def distance-maxes {:note 2 :duration 4 :loudness 3 :style 6})
-(def cor-anglais (play-gen cor-anglais-samples defaults features distance-maxes))
+
+(def ^:private tmp (play-gen cor-anglais-samples defaults features distance-maxes))
+(def cor-anglais (:ugen tmp))
+(def cor-anglais-inst (:effect tmp))
+(def cor-anglaisi (:effect tmp))

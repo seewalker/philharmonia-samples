@@ -9,4 +9,8 @@
 (def defaults (array-map :note "F5" :duration "025" :loudness "forte" :style "normal"))
 (def features (featureset [:note :duration :loudness :style] (keys flute-samples)))
 (def distance-maxes {:note 2 :duration 4 :loudness 3 :style 6})
-(def flute (play-gen flute-samples defaults features distance-maxes))
+
+(def ^:private tmp (play-gen flute-samples defaults features distance-maxes))
+(def flute (:ugen tmp))
+(def flute-inst (:effect tmp))
+(def flutei (:effect tmp))

@@ -6,7 +6,12 @@
         [overtone.live]))
 
 (def viola-samples (path-to-described-samples (str sampleroot "/viola")))
-(def defaults (array-map :note "F5" :duration "025" :loudness "forte" :style "normal"))
+(def defaults (array-map :note "F5" :duration "025" :loudness "fortissimo" :style "arco-normal"))
 (def features (featureset [:note :duration :loudness :style] (keys viola-samples)))
 (def distance-maxes {:note 2 :duration 4 :loudness 3 :style 6})
-(def viola (play-gen viola-samples defaults features distance-maxes))
+
+
+(def ^:private tmp (play-gen viola-samples defaults features distance-maxes))
+(def viola (:ugen tmp))
+(def viola-inst (:effect tmp))
+(def violai (:effect tmp))

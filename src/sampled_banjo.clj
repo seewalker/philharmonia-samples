@@ -9,4 +9,8 @@
 (def defaults (array-map :note "F5" :duration "very-long" :loudness "forte" :style "normal"))
 (def features (featureset [:note :duration :loudness :style] (keys banjo-samples)))
 (def distance-maxes {:note 2 :duration 4 :loudness 3 :style 6})
-(def banjo (play-gen banjo-samples defaults features distance-maxes))
+
+(def ^:private tmp (play-gen banjo-samples defaults features distance-maxes))
+(def banjo (:ugen tmp))
+(def banjo-inst (:effect tmp))
+(def banjoi (:effect tmp))

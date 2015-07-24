@@ -57,15 +57,27 @@
                                                      (try-corrected-val feature-name (get the-map feature-name) defaults feature-set distance-maxes)
                                                      default-value)))
         num-channels 1 ;this is information *about* the samples that the sampling process must know about.
-        ]
-    (fn [& args]
-      (let [descr (if (empty? args)
+        descr (fn [args]  (if (empty? args)
                     inst-defaults
                     (if (vector? (first args))
                       (first args)
                       (if (map? (first args))
                         (map-handle (first args) distance-maxes)
-                        (map-handle (hash-map args) distance-maxes))))]
-        (if (contains? described-inst descr)
-            (play-buf num-channels (get described-inst descr))
-            (println (format "%s that sample is not available" (str (vec descr)))))))))
+                        (map-handle (hash-map args) distance-maxes)))))]
+    {:ugen
+     (fn [& args]
+      (let [choice (descr args)]
+        (if (contains? described-inst choice)
+            (play-buf num-channels (get described-inst choice))
+            (do (println (format "%s that sample is not available" (str (vec choice))))
+                false))))
+     :effect
+(fn [& args]
+      (let [choice (descr args)]
+        (if (contains? described-inst choice)
+            (do
+              (demo (play-buf num-channels (get described-inst choice)))
+              true)
+            (do (println (format "%s that sample is not available" (str (vec choice))))
+                false))))
+     }))

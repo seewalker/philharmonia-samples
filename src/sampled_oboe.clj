@@ -9,4 +9,8 @@
 (def defaults (array-map :note "F5" :duration "025" :loudness "forte" :style "normal"))
 (def features (featureset [:note :duration :loudness :style] (keys oboe-samples)))
 (def distance-maxes {:note 2 :duration 4 :loudness 3 :style 6})
-(def oboe (play-gen oboe-samples defaults features distance-maxes))
+
+(def ^:private tmp (play-gen oboe-samples defaults features distance-maxes))
+(def oboe (:ugen tmp))
+(def oboe-inst (:effect tmp))
+(def oboei (:effect tmp))

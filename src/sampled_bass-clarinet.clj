@@ -9,4 +9,8 @@
 (def defaults (array-map :note "F5" :duration "025" :loudness "forte" :style "normal"))
 (def features (featureset [:note :duration :loudness :style] (keys bass-clarinet-samples)))
 (def distance-maxes {:note 2 :duration 4 :loudness 3 :style 6})
-(def bass-clarinet (play-gen bass-clarinet-samples defaults features distance-maxes))
+
+(def ^:private tmp (play-gen bass-clarinet-samples defaults features distance-maxes))
+(def bass-clarinet (:ugen tmp))
+(def bass-clarinet-inst (:effect tmp))
+(def bass-clarineti (:effect tmp))

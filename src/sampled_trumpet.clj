@@ -9,4 +9,9 @@
 (def defaults (array-map :note "F5" :duration "025" :loudness "forte" :style "normal"))
 (def features (featureset [:note :duration :loudness :style] (keys trumpet-samples)))
 (def distance-maxes {:note 2 :duration 4 :loudness 3 :style 6})
-(def trumpet (play-gen trumpet-samples defaults features distance-maxes))
+
+
+(def ^:private tmp (play-gen trumpet-samples defaults features distance-maxes))
+(def trumpet (:ugen tmp))
+(def trumpet-inst (:effect tmp))
+(def trumpeti (:effect tmp))
