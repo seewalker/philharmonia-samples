@@ -21,6 +21,7 @@ You may want to only refer celloi if you are exclusively live-coding (for sake o
 Loading all the samples associated with an instrument can produce a var taking up as little as 21MB, in the case of the mandolin, and as much as 169 MB, in the case of the violin. For this reason, the samples are grouped into separate files by instrument.
 
 ## calling samples
+
 `(cello)`
 
 produces a ugen playing the default sample.
@@ -36,7 +37,6 @@ will make your speakers play the default sample
 `(demo (cello))`
 
  equivalent to above
-
 
 `(cello {:note "As3" :loudness "piano" :style "vibrato" :duration "025"])`
 
@@ -83,9 +83,9 @@ This simply overlaps the sounds of a sine wave playing a frequency, a cello play
 
 # error handling
 
-If you specify a parameter that does not exist, that information is discarded and the default value for the parameter you meant is used.
-If you specify a value that a parameter cannot take, autocorrection is attempted. If no suitable correction, the default value is used.
-If you specify a combination of allowed and parameters that has no corresponding sample, an error message is printed and the expression evaluates to false.
+- If you specify a parameter that does not exist, that information is discarded and the default value for the parameter you meant is used.
+- If you specify a value that a parameter cannot take, autocorrection is attempted. If no suitable correction, the default value is used.
+- If you specify a combination of allowed and parameters that has no corresponding sample, an error message is printed and the expression evaluates to false.
 
 It may make sense to make the decision of whether to the use of default values be a configurable thing.
 Rather than simply printing an error message when there is no corresponding sample for what is requested, it may make more sense to try to play a sample most similar to the requested sample, but that's a lot of effort and this project is not currently in heavy enough use for that to pay off.
@@ -105,7 +105,9 @@ To use it with leiningen, put this in your project.clj
 
 ## The Samples Themselves
 Overtone requires ".wav" files, but the philharmonia website provides mp3s. I've gone through the work of converting them, and you can download the samples from [my google drive](https://drive.google.com/folderview?id=0B7GoGDjZUyZ5flIxOXNPN2VjdXl2ZXpzTGRQTE9OU3pJYmV4Vlg3VFZRd3hhek5lelNiUVU&usp=sharing)
-The library expects a directory structure with naming conventions like what you can download at that link. The sample's root directory can be anywhere on your filesystem, and the samples can be used if the `sampleroot` var in `sample_utils.clj` file points to it.
+The library expects a directory structure with naming conventions like what you can download at that link. The sample's root directory should be called 'phil-samples' and be placed in a directory called 'resources' in your project's root directory.
+
+Because 'require'ing sampled instruments takes a lot of I/O, you may find that it takes long enough to cause your runtime system to timeout. If you are using leiningen, a way around this is putting `:repl-options { :timeout large_number_here}` where `large_number_here` is greater than the default, which was 5000 the time I measured it.
 
 # Welcome Changes
 

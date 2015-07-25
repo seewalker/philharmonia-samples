@@ -8,7 +8,7 @@
             [clj-diff.core :as diff]
             [clojure.core.matrix :as matrix]))
 
-(def sampleroot "/Users/shalom/myData/phil-samples")
+(def sampleroot "resources/phil-samples")
 (defn path-to-described-samples
   "Takes a path pointing to a directory which is expected to contain a subdirectory for each wanted sampled instrument. The directory for each instrument is expected to have sound files of .wav format, and the names of these files are supposed to consist of the instrument name followed by underscore-separated features associated with the sample.
 
