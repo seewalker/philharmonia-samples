@@ -33,8 +33,11 @@
 (defn try-corrected-val
   "This gets mapped over key-value pairs provided by the user. "
   [featurename featureval defaults featureset distance-maxes ]
-  (let [ds (for [allowed-valuename (get featureset featurename)]
-              {:n allowed-valuename :d (diff/edit-distance featureval allowed-valuename)})
+  (let [featureval (if (and (= featurename :note) (integer? featureval))
+                     (str featureval)
+                     (-> featureval note str))
+        ds (for [allowed-valuename (get featureset featurename)]
+             {:n allowed-valuename :d (diff/edit-distance featureval allowed-valuename)})
         minimum (first (sort-by :d ds))]
     (if (some #(= featureval %) (get featureset featurename)) ;the featureval is valid.
       featureval

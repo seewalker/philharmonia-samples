@@ -38,7 +38,7 @@ will make your speakers play the default sample
 
  equivalent to above
 
-`(cello {:note "As3" :loudness "piano" :style "vibrato" :duration "025"])`
+`(cello {:note "A#3" :loudness "piano" :style "vibrato" :duration "025"])`
 
 you can specify all parameters in a map.
 
@@ -46,11 +46,11 @@ you can specify all parameters in a map.
 
 order does not matter in the map, so this will also produce a sound.
 
-`(cello {:note "As3"})`
+`(cello {:note "A#3"})`
 
 you can specify only the parameters you wish, and the default value for each unspecified parameter gets filled in.
 
-`(cello :note "As3" :style "vibrato")`
+`(cello :note "A#3" :style "vibrato")`
 
 or, since overtone is meant for live coding, you can save some precious keystrokes by passing keys and values instead of an explicit map.
 
@@ -62,7 +62,7 @@ passing an integer will make the value interpreted as a midi note, rather than a
 
 'note' is arguably the most significant feature, so a single scalar argument will be interpreted as a note.
 
-`(cello` ["As3" "piano" "vibrato"])
+`(cello` ["A#3" "piano" "vibrato"])
 
 when passing a vector, you must specify all features.
 
@@ -80,6 +80,8 @@ Because `(cello)` produces a ugen, it could be used like so:
                 (white-noise)))))
 
 This simply overlaps the sounds of a sine wave playing a frequency, a cello playing a note which the human ear predominantly associates with that same frequency, and some white noise.
+
+For clarifications sake, a string note value follows the overtone naming conventions and an integer note value has MIDI units.
 
 # error handling
 
