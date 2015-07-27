@@ -1,4 +1,4 @@
-(defproject seewalker/philharmonia-samples "0.0.0-SNAPSHOT"
+(defproject seewalker/philharmonia-samples "0.0.1"
   :description "Samples from the philharmonia orchestra made available for making music with overtone"
   :url "http://github.com/seewalker/philharmonia-samples"
   :license {:name "GPL v3"

@@ -1,7 +1,7 @@
 (ns
     ^{:doc "The (minimal) infrastructure needed for overtone-readiness of samples"
       :author "Alex Seewald" }
- sample-utils
+ philharmonia-samples.sample-utils
   (:use   [overtone.live])
   (:require [clojure.string :as string]
             [clojure.java.io :as io]
@@ -33,9 +33,11 @@
 (defn try-corrected-val
   "This gets mapped over key-value pairs provided by the user. "
   [featurename featureval defaults featureset distance-maxes ]
-  (let [featureval (if (and (= featurename :note) (integer? featureval))
-                     (str featureval)
-                     (-> featureval note str))
+  (let [featureval (if (= featurename :note)
+                     (if (integer? featureval)
+                         (str featureval)
+                         (-> featureval note str))
+                     featureval)
         ds (for [allowed-valuename (get featureset featurename)]
              {:n allowed-valuename :d (diff/edit-distance featureval allowed-valuename)})
         minimum (first (sort-by :d ds))]
@@ -60,13 +62,13 @@
                                                      (try-corrected-val feature-name (get the-map feature-name) defaults feature-set distance-maxes)
                                                      default-value)))
         num-channels 1 ;this is information *about* the samples that the sampling process must know about.
-        descr (fn [args]  (if (empty? args)
-                    inst-defaults
-                    (if (vector? (first args))
-                      (first args)
-                      (if (map? (first args))
-                        (map-handle (first args) distance-maxes)
-                        (map-handle (hash-map args) distance-maxes)))))]
+        descr (fn [args]
+                (cond
+                 (empty? args) inst-defaults
+                 (integer? (first args)) (map-handle {:note (first args)})
+                 (vector? (first args)) (first args)
+                 (map? (first args)) (map-handle (first args) distance-maxes)
+                 true (map-handle (apply hash-map args) distance-maxes)))]
     {:ugen
      (fn [& args]
       (let [choice (descr args)]
