@@ -62,7 +62,7 @@ passing an integer will make the value interpreted as a midi note, rather than a
 
 'note' is arguably the most significant feature, so a single scalar argument will be interpreted as a note.
 
-`(cello` ["A#3" "piano" "vibrato"])
+`(cello ["A#3" "piano" "vibrato"])`
 
 when passing a vector, you must specify all features.
 
@@ -103,11 +103,11 @@ The sample data itself is on the order of gigabyes, so it is not feasible to hos
 
 ## The library
 To use it with leiningen, put this in your project.clj
-`[org.seewalker.philharmonia]`
+`[org.seewalker.philharmonia "0.0.1"]`
 
 ## The Samples Themselves
-Overtone requires ".wav" files, but the philharmonia website provides mp3s. I've gone through the work of converting them, and you can download the samples from [my google drive](https://drive.google.com/folderview?id=0B7GoGDjZUyZ5flIxOXNPN2VjdXl2ZXpzTGRQTE9OU3pJYmV4Vlg3VFZRd3hhek5lelNiUVU&usp=sharing)
-The library expects a directory structure with naming conventions like what you can download at that link. The sample's root directory should be called 'phil-samples' and be placed in a directory called 'resources' in your project's root directory.
+Overtone requires ".wav" files, but the philharmonia website provides mp3s. I've gone through the work of converting them, and you can download the samples from [my google drive](https://drive.google.com/open?id=0B7GoGDjZUyZ5MUxsVmQxVzJOTVE). Note, this URL plays nicely with web browsers but not utilities like `curl`.
+The library expects a directory structure with naming conventions like what you can download at that link. To use these samples, unzip them into the 'resources' directory of your project (this is a standard part of leiningen templates).
 
 Because 'require'ing sampled instruments takes a lot of I/O, you may find that it takes long enough to cause your runtime system to timeout. If you are using leiningen, a way around this is putting `:repl-options { :timeout large_number_here}` where `large_number_here` is greater than the default, which was 5000 the time I measured it.
 
