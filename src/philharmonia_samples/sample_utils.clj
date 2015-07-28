@@ -65,7 +65,7 @@
         descr (fn [args]
                 (cond
                  (empty? args) inst-defaults
-                 (integer? (first args)) (map-handle {:note (first args)})
+                 (integer? (first args)) (map-handle {:note (first args)} distance-maxes)
                  (vector? (first args)) (first args)
                  (map? (first args)) (map-handle (first args) distance-maxes)
                  true (map-handle (apply hash-map args) distance-maxes)))]

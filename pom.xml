@@ -3,7 +3,7 @@
   <groupId>seewalker</groupId>
   <artifactId>philharmonia-samples</artifactId>
   <packaging>jar</packaging>
-  <version>0.0.0-SNAPSHOT</version>
+  <version>0.0.1-SNAPSHOT</version>
   <name>philharmonia-samples</name>
   <description>Samples from the philharmonia orchestra made available for making music with overtone</description>
   <url>http://github.com/seewalker/philharmonia-samples</url>
@@ -16,7 +16,7 @@
   <scm>
     <connection>scm:git:git://github.com//.git</connection>
     <developerConnection>scm:git:ssh://git@github.com//.git</developerConnection>
-    <tag>f8ba7fd7b9107fc00ba0c11513a3cf02fd70c0a3
+    <tag>b8f6ee3534ab3d88799d4e19e567fb2e4cb7aa96
 </tag>
     <url>https://github.com//</url>
   </scm>
