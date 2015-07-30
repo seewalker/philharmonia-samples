@@ -83,6 +83,42 @@ This simply overlaps the sounds of a sine wave playing a frequency, a cello play
 
 For clarifications sake, a string note value follows the overtone naming conventions and an integer note value has MIDI units.
 
+# Scheduling 
+
+Overtone seems to provide some special infrastructure for things it considers instruments. This project does not make its sampled instruments with overtone's definst macro, so some things like `at` do not work as one expects it to work with instruments. Instead, scheduling should be done as is done with raw ugens (or arbitrary clojure functions, for that matter). I always use the `after-delay` function, which is exported by the `overtone.live` module, like so:
+
+`(after-delay 1000 #(celloi :note "C4"))`
+
+schedules a cello to play the a "C4" note in 1000 milliseconds (one second).
+
+`(after-delay 0 #(demo (sin-osc 440)))`
+
+schedules a sine-wave to be played now.
+
+    (defn avril14 [beat it]
+      (let [righthand (fn []
+                    (do
+                        (after-delay 0 #(celloi :note "C5"))
+                        (after-delay (* beat 1) #(celloi :note "F4"))
+                        (after-delay (* beat 2) #(celloi :note "Ab4"))
+                        (after-delay (* beat 3.5) #(celloi :note "Ab4"))
+                        (after-delay (* beat 3.75) #(celloi :note "F4"))))
+            lefthand (fn []
+                        (do
+                        (after-delay 0 #(celloi :note "Ab2"))
+                        (after-delay (* beat 0.5) #(celloi :note "F2"))
+                        (after-delay (* beat 1) #(celloi :note "Ab3"))
+                        (after-delay (* beat 1.5) #(celloi :note "C3"))
+                        (after-delay (* beat 2) #(celloi :note "C2"))
+                        (after-delay (* beat 2.5) #(celloi :note "Ab3"))
+                    (after-delay (* beat 3) #(celloi :note "C4"))
+                    (after-delay (* beat 3.5) #(celloi :note "Eb4"))))]
+    (lefthand)
+    (righthand)
+    (apply-at (+ (now) (* beat 4)) #'phrase [beat (+ it 1)])))
+
+Plays the first bar of 'Avril 14' by Aphex Twin on the cello.
+
 # error handling
 
 - If you specify a parameter that does not exist, that information is discarded and the default value for the parameter you meant is used.
