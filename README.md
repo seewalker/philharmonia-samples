@@ -8,11 +8,11 @@ Let's use the example of a cello, because all the samples instruments are simila
 
 ##loading samples
 
-`(use 'sampled-cello)`
+`(use 'philharmonia-samples.sampled-cello)`
 
 assuming philharmonia-samples/src is in your classpath.
 
-`(:require [sampled-cello :refer [cello celloi cello-inst]])`
+`(:require [philharmonia-samples.sampled-cello :refer [cello celloi cello-inst]])`
 
 all the sampled instrument files have similar information in them, sharing the same name, so you should probably 'require' rather than 'use' it, and you likely don't care about those other names, so you could just refer the ugen producing function (cello) and the instrument-like function (celloi).
 
