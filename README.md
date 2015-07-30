@@ -1,6 +1,15 @@
 # What does this project do for you?
 
-This project provides one module per sample instrument. Each module provides a function, of the same name as the instrument, which returns a ugen suitable for use with overtone. A simple way to describe a ugen might be a composable, commutable unit of sound specification; for more information see. Each module also provides a function which accepts the same form of input, but which affects sounds rather than returning a ugen. The 'definst' infrastructure is not used because these sampled instruments have many variants, e.g. vibrato or non-vibrato, of the same note.
+This project provides an interface to work with a variety of instrument samples from the London Philharmonic Orchestra, either as ugens or as clojure functions which produce sound effects when called. There is exactly one module per sample instrument. Each module provides a function, of the same name as the instrument, which returns a ugen suitable for use with overtone. A simple way to describe a ugen might be a composable, commutable unit of sound specification; for more information see. Each module also provides a function which accepts the same form of input, but which affects sounds rather than returning a ugen. The 'definst' infrastructure is not used because these sampled instruments have many variants, e.g. vibrato or non-vibrato, of the same note.
+
+# How to get things going:
+
+To use it with leiningen, put this in your project.clj
+`[org.seewalker.philharmonia "0.0.1"]`
+
+The sample data itself is on the order of gigabyes, so it is not feasible to host it on github or clojars along with the code. For now, the place to get them is [my google drive](https://drive.google.com/open?id=0B7GoGDjZUyZ5MUxsVmQxVzJOTVE). Note, this URL plays nicely with web browsers but not utilities like `curl`. The reason to download them from here rather than the philharmonic website is that they provide .mp3s, whereas overtone requires .wavs, and I've done the work of converting them and packaging them as a single zip.
+
+When you've downloaded that, unzip it into the `resources` folder of your leiningen project.
 
 # How to use the sampled instrument functions
 
@@ -132,20 +141,6 @@ Rather than simply printing an error message when there is no corresponding samp
 
 - You can scale up or scale back how eagerly misspellings are autocorrected for each parameter. The `distance-maxes` var in each sampled instrument file has keys corresponding to the parameters, and values corresponding to the maximum string distance between allowed values and values that will be corrected. Note, these values can be set to '0' if you do not want any autocorrection.
 - You can change what the default parameters for an instrument are by changing the `defaults` var.
-
-# How to get things going:
-
-The sample data itself is on the order of gigabyes, so it is not feasible to host it on github or clojars along with the code.
-
-## The library
-To use it with leiningen, put this in your project.clj
-`[org.seewalker.philharmonia "0.0.1"]`
-
-## The Samples Themselves
-Overtone requires ".wav" files, but the philharmonia website provides mp3s. I've gone through the work of converting them, and you can download the samples from [my google drive](https://drive.google.com/open?id=0B7GoGDjZUyZ5MUxsVmQxVzJOTVE). Note, this URL plays nicely with web browsers but not utilities like `curl`.
-The library expects a directory structure with naming conventions like what you can download at that link. To use these samples, unzip them into the 'resources' directory of your project (this is a standard part of leiningen templates).
-
-Because 'require'ing sampled instruments takes a lot of I/O, you may find that it takes long enough to cause your runtime system to timeout. If you are using leiningen, a way around this is putting `:repl-options { :timeout large_number_here}` where `large_number_here` is greater than the default, which was 5000 the time I measured it.
 
 # Welcome Changes
 
